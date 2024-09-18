@@ -27,8 +27,6 @@ def remove_anchor(input, expected):
         print(f"isValid: {input.split('#')[0] == expected}")
      else:
          raise ValueError(f"{input} no es de tipo string")
-         #print(f"este valor {type(input)} no puede ser comparado")
-     #return input.rsplit('#')[0]
 
 
 for input, expected in to_test:
