@@ -1,3 +1,5 @@
+from utils.type_validator import validator
+
 to_test = [
     [123, "Error"],  # Entrada no válida (int)
     [None, "Error"],  # Entrada no válida (None)
@@ -22,9 +24,9 @@ to_test = [
 ]
 
 def remove_anchor(input, expected):
-     if isinstance(input, str):
-        print(input.rsplit('#')[0])
-        print(f"isValid: {input.split('#')[0] == expected}")
+     if validator(input, str):
+         print(input.rsplit('#')[0])
+         print(f"isValid: {input.split('#')[0] == expected}")
      else:
          raise ValueError(f"{input} no es de tipo string")
 
