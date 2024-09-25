@@ -1,6 +1,4 @@
-from utils.type_validator import validator
-
-to_test = [
+test_cases = [
     [123, "Error"],  # Entrada no válida (int)
     [None, "Error"],  # Entrada no válida (None)
     ["www.codewars.com#about", "www.codewars.com"],
@@ -22,17 +20,3 @@ to_test = [
     [{"key": "value"}, "Error"],  # Entrada como diccionario
     ["www.codewars.com#special_characters!@#$%^&*()", "www.codewars.com"],
 ]
-
-def remove_anchor(input, expected):
-     if validator(input, str):
-         print(input.rsplit('#')[0])
-         print(f"isValid: {input.split('#')[0] == expected}")
-     else:
-         raise ValueError(f"{input} no es de tipo string")
-
-
-for input, expected in to_test:
-    try:
-        remove_anchor(input, expected)
-    except ValueError as e:
-        print(e)
