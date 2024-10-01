@@ -20,7 +20,7 @@ class TestValidator:
     def __load_test_cases(self):
         if os.path.exists(self.__test_cases_path):
             loaded_test_cases = {}
-            with open(self.__test_cases_path) as file_reference:
+            with open(self.__test_cases_path, encoding='utf-8') as file_reference:
                 file_content = file_reference.read()
                 #https://www.w3schools.com/python/ref_func_exec.asp
                 exec(file_content, {}, loaded_test_cases)
@@ -33,7 +33,7 @@ class TestValidator:
             return "\\"
 
     def run_tests(self):
-        for input, expected in self.__test_cases:
+        for index, (input, expected) in enumerate(self.__test_cases):
             try:
                result = self.__fn_to_test(input)
                assert result == expected
