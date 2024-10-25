@@ -4,6 +4,8 @@ import os
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+from os.path import split
+
 column_name_mapping = {
     'ID': 'id',
     'Nombres': 'ingredient_name',
@@ -14,20 +16,25 @@ column_name_mapping = {
     'Fecha de Caducidad': 'expiration_date'
 }
 
+
+def is_float(element: any) -> bool:
+    # If you expect None to be passed:
+    if element is None:
+        return False
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
+
 with open(os.path.join(__location__, 'ingredientes.csv'), newline='', encoding='utf-8') as csvfile:
     ingredients_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     headers, *ingredients = ingredients_reader
     mapped_headers = ", ".join(list(map(lambda header: column_name_mapping[header],headers)))
     final_string = ""
-    for sub_array in ingredients:
-        values_string= ""
-        values_string += f"({', '.join(sub_array)})"
-        final_string += values_string + ',' + '\n'
-    statement = f"INSERT INTO Ingredients ({mapped_headers})" +'\n'  + "VALUES" +'\n' + final_string[:-2] +';' +'\n' + "COMMIT;"
-    #print(statement)
-    with open("transaction.sql", "w") as file:
-      file.writelines(statement)
-    # sql_statement = INSERT INTO Ingredients (CustomerName, ContactName, Address, City, PostalCode, Country)
-    # VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
-    # for row in ingredients_reader:
-    #     print(row)
+    for ingredient_row in ingredients:
+        parsed_column_values= list(map(lambda colval: f"'{colval}'" if not is_float(colval) else colval,ingredient_row))
+        final_string+= f"\n({", ".join(parsed_column_values)}),"
+    statement = f"INSERT INTO Ingredients ({mapped_headers})" +'\n'  + "VALUES"  + final_string[:-1]  +';' +'\n' + "COMMIT;"
+    with open("transaction.sql", "w", encoding='utf-8') as file:
+        file.writelines(statement)
